@@ -4,7 +4,3 @@ const apiUrl = `https://todo.timleland.com/api/user/${userId}/task/`;
 ajax.get(apiUrl, (tasks) => {
   console.log(tasks);
 });
-
-window.vm = new Vue({
-  el: "#app"
-});
