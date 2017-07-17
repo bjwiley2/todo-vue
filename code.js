@@ -6,5 +6,10 @@ ajax.get(apiUrl, (tasks) => {
 });
 
 window.vm = new Vue({
-  el: "#app"
+  el: "#app",
+  data: {
+    tasks: [
+      { task: "Get these tasks from the API" }
+    ]
+  }
 });
