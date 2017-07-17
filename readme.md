@@ -1,8 +1,8 @@
-Code for the ACST training workshop on VueJS
+# ACST VueJS Code Workshop
 
 Presented by @bjwiley2 and @timleland
 
-# Steps
+## Steps
 0. Initial state
 1. Hide raw templates using the v-cloak directive and some css
 2. Use the instance's data object to show data in the template
