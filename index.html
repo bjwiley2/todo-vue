@@ -10,7 +10,7 @@
 
     <div id="app" v-cloak>
       <ul>
-        <li v-for="t in tasks">{{ t.task }}</li>
+        <li v-for="(t, i) in tasks">{{ t.task }} (Priority {{ i + 1 }})</li>
       </ul>
     </div>
 
