@@ -9,7 +9,9 @@
   <body>
 
     <div id="app" v-cloak>
-      {{ tasks[0].task }}
+      <ul>
+        <li v-for="t in tasks">{{ t.task }}</li>
+      </ul>
     </div>
 
     <script src="https://unpkg.com/vue@2.2.4" type="text/javascript"></script>

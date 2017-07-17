@@ -4,9 +4,7 @@ const apiUrl = `https://todo.timleland.com/api/user/${userId}/task/`;
 window.vm = new Vue({
   el: '#app',
   data: {
-    tasks: [
-      {}
-    ]
+    tasks: []
   },
   mounted () {
     const self = this;
