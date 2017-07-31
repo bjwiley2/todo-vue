@@ -10,15 +10,26 @@
 
     <div id="app" v-cloak>
       <ul>
-        <li v-for="(t, i) in tasks" v-on:click="editTask(t)">
+        <li v-for="(t, i) in tasks" v-bind:key="t.id" v-on:click="editTask(t)">
           {{ t.task }} (Priority {{ i + 1 }})
         </li>
       </ul>
 
-      <hr v-show="editingTask" />
+      <hr />
+      <task-select v-model="editingTask" v-bind:list="tasks"></task-select>
 
-      <task-form v-if="editingTask" v-bind:task="editingTask" v-on:cancel="cancelEdit" />
+      <hr v-show="editingTask" />
+      <task-form v-if="editingTask" v-bind:task="editingTask" v-on:cancel="cancelEdit"></task-form>
     </div>
+
+    <script id="task-select-template" type="text/html">
+      <select v-model="internalValue">
+        <option v-bind:value="null">[None]</option>
+        <option v-for="t in list" v-bind:value="t" v-bind:key="t.id">
+          {{t.task}}
+        </option>
+      </select>
+    </script>
 
     <script id="task-form-template" type="text/html">
       <form v-on:submit.prevent="saveTask">
