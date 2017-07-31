@@ -8,11 +8,18 @@ var taskFormComponent = {
       required: true
     },
   },
+  data: function () {
+    return {
+      formTask: Object.assign({}, this.task)
+    };
+  },
   methods: {
     saveTask: function () {
       var self = this;
-      self.$emit('cancel');
-      ajax.put(apiUrl + self.task.id, self.task);
+      ajax.put(apiUrl + self.formTask.id, self.formTask, function () {
+        self.$emit('cancel');
+        Object.assign(self.task, self.formTask);
+      });
     },
     cancelEdit: function () {
       this.$emit('cancel');

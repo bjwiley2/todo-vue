@@ -22,7 +22,7 @@
 
     <script id="task-form-template" type="text/html">
       <form v-on:submit.prevent="saveTask">
-        <input type="text" v-model="task.task" />
+        <input type="text" v-model="formTask.task" />
         <input type="submit" />
         <a href="javascript:void(0);" v-on:click="cancelEdit">Cancel</a>
       </form>
