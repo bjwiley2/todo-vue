@@ -6,10 +6,10 @@ window.vm = new Vue({
         }
     },
     created: function() {
-        this.getTask();
+        this.getTasks();
     },
     methods: {
-        getTask: function() {
+        getTasks: function() {
             var self = this;
             ajax.get(function(tasks) {
                 self.tasks = tasks;
