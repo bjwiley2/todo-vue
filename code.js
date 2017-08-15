@@ -1,15 +1,20 @@
-const userId = 1;
-const apiUrl = `https://todo.timleland.com/api/user/${userId}/task/`;
-
-ajax.get(apiUrl, (tasks) => {
-  console.log(tasks);
-});
-
 window.vm = new Vue({
-  el: "#app",
-  data: {
-    tasks: [
-      { task: "Get these tasks from the API" }
-    ]
-  }
+    el: '#app',
+    data: function() {
+        return {
+            heading: 'To Do List',
+            tasks: []
+        }
+    },
+    created: function() {
+        this.getTasks();
+    },
+    methods: {
+        getTasks: function() {
+            var self = this;
+            api.getList(function(tasks) {
+                self.tasks = tasks;
+            });
+        }
+    }
 });
