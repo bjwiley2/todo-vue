@@ -28,7 +28,6 @@ const call = (method, data, callback) => {
 window.ajax = {};
 
 ajax.get = (callback) => {
-    debugger
     call('GET', null, callback);
 };
 
