@@ -11,7 +11,7 @@ window.vm = new Vue({
     methods: {
         getTasks: function() {
             var self = this;
-            ajax.get(function(tasks) {
+            api.getList(function(tasks) {
                 self.tasks = tasks;
             });
         }
