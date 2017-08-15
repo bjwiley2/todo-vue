@@ -1,6 +1,3 @@
-const userId = 1;
-const apiUrl = `https://todo.timleland.com/api/user/${userId}/task/`;
-
 window.vm = new Vue({
   el: '#app',
   data: {
@@ -9,7 +6,7 @@ window.vm = new Vue({
   mounted () {
     const self = this;
 
-    ajax.get(apiUrl, (tasks) => {
+    api.getList((tasks) => {
       self.tasks = tasks;
     });
   }
