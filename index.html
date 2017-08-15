@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <title>VueJS Workshop</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
-  </head>
-  <body>
+</head>
+
+<body>
 
     <div id="app" v-cloak>
-      1 + 1 = {{ 1 + 1 }}
+        <ol>
+            <li v-for="t in tasks">
+                {{ t.task }})
+            </li>
+        </ol>
     </div>
 
     <script src="https://unpkg.com/vue@2.2.4" type="text/javascript"></script>
     <script src="ajax.js" type="text/javascript"></script>
     <script src="code.js" type="text/javascript"></script>
-  </body>
+</body>
+
 </html>

@@ -1,42 +1,45 @@
-const call = (method, url, data, callback) => {
-  const request = new XMLHttpRequest();
+const userId = 1;
+const apiUrl = `https://todo.timleland.com/api/user/${userId}/task/`;
 
-  request.onreadystatechange = () => {
-    if (request.readyState === 4) {
-      const status = request.status;
+const call = (method, data, callback) => {
+    const request = new XMLHttpRequest();
 
-      if (status >= 200 && status <= 299) {
-        const response = request.response;
+    request.onreadystatechange = () => {
+        if (request.readyState === 4) {
+            const status = request.status;
 
-        if (callback) {
-          callback(response ? JSON.parse(request.response) : null);
+            if (status >= 200 && status <= 299) {
+                const response = request.response;
+
+                if (callback) {
+                    callback(response ? JSON.parse(request.response) : null);
+                }
+            } else {
+                console.error('AJAX Error:', status, request.responseText);
+            }
         }
-      }
-      else {
-        console.error('AJAX Error:', status, request.responseText);
-      }
-    }
-  };
+    };
 
-  request.open(method, url, true);
-  request.setRequestHeader('Content-Type', 'application/json');
-  request.send(data ? JSON.stringify(data) : null);
+    request.open(method, apiUrl, true);
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.send(data ? JSON.stringify(data) : null);
 };
 
 window.ajax = {};
 
-ajax.get = (url, callback) => {
-  call('GET', url, null, callback);
+ajax.get = (callback) => {
+    debugger
+    call('GET', null, callback);
 };
 
-ajax.put = (url, data, callback) => {
-  call('PUT', url, data, callback);
+ajax.put = (data, callback) => {
+    call('PUT', data, callback);
 };
 
-ajax.post = (url, data, callback) => {
-  call('POST', url, data, callback);
+ajax.post = (data, callback) => {
+    call('POST', data, callback);
 };
 
-ajax.delete = (url, callback) => {
-  call('DELETE', url, null, callback);
+ajax.delete = (callback) => {
+    call('DELETE', null, callback);
 };
