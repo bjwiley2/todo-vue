@@ -13,7 +13,7 @@
     <div id="app" v-cloak>
         <h2>{{heading}}</h2>
         <ol>
-            <li v-for="t in tasks">
+            <li v-for="t in tasks" v-bind:key="t.id">
                 {{ t.task }}
             </li>
         </ol>
