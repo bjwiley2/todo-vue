@@ -17,7 +17,7 @@
             <input type="submit" value="Add Task">
         </form>
         <ol>
-            <li v-for="(t, i) in tasks">
+            <li v-for="(t, i) in tasks" v-bind:key="t.id">
                 {{ t.task }} <button v-on:click="deleteTask(i)">Delete</button>
             </li>
         </ol>
