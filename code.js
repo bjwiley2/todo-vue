@@ -1,89 +1,93 @@
-const userId = 1;
-const apiUrl = `https://todo.timleland.com/api/user/${userId}/task/`;
+Vue.directive('focus', {
+    inserted: function(el) {
+        el.focus()
+    }
+});
 
-var taskSelectComponent = {
-  props: {
-    value: {
-      type: Object,
-      default: null
-    },
-    list: {
-      type: Array,
-      required: true
-    }
-  },
-  data: function () {
-    return {
-      internalValue: this.value
-    };
-  },
-  watch: {
-    internalValue: function () {
-      this.$emit('input', this.internalValue);
-      this.$emit('change', this.internalValue);
-    },
-    value: function () {
-      this.internalValue = this.value;
-    }
-  },
-  template: '#task-select-template'
-};
+Vue.filter('truncate', function(str, length) {
+    length = length || 30;
 
-var taskFormComponent = {
-  props: {
-    task: {
-      type: Object,
-      required: true
-    },
-  },
-  data: function () {
-    return {
-      formTask: Object.assign({}, this.task)
-    };
-  },
-  methods: {
-    saveTask: function () {
-      var self = this;
-      ajax.put(apiUrl + self.formTask.id, self.formTask, function () {
-        self.$emit('cancel');
-        Object.assign(self.task, self.formTask);
-      });
-    },
-    cancelEdit: function () {
-      this.$emit('cancel');
+    if (str.length <= length) {
+        return str;
     }
-  },
-  watch: {
-    task: function () {
-      Object.assign(this.formTask, this.task);
-    }
-  },
-  template: '#task-form-template'
-};
+
+    str = str.slice(0, length);
+
+    return str + '...';
+});
 
 window.vm = new Vue({
-  el: '#app',
-  components: {
-    taskForm: taskFormComponent,
-    taskSelect: taskSelectComponent
-  },
-  data: {
-    tasks: [],
-    editingTask: null
-  },
-  methods: {
-    editTask: function (task) {
-      this.editingTask = task;
+    el: '#app',
+    data: function() {
+        return {
+            heading: 'To Do List',
+            tasks: [],
+            newTask: null,
+            taskModel: {},
+            searchValue: null,
+            taskLoaded: false
+        }
     },
-    cancelEdit: function () {
-      this.editingTask = null;
-    }
-  },
-  mounted: function () {
-    var self = this;
+    created: function() {
+        this.getTasks();
+    },
+    methods: {
+        getTasks: function() {
+            var self = this;
+            api.getList(function(tasks) {
+                self.taskLoaded = true;
+                self.tasks = tasks;
+            });
+        },
+        addTask: function() {
+            var self = this;
+            var task = {
+                task: self.newTask
+            };
 
-    ajax.get(apiUrl, function (tasks) {
-      self.tasks = tasks;
-    });
-  }
+            api.create(task, function(id) {
+                api.get(id, function(task) {
+                    self.tasks.push(task);
+                    self.newTask = null;
+                })
+            });
+        },
+        deleteTask: function(index) {
+            var self = this;
+            var task = self.tasks[index];
+            api.delete(task.id, function() {
+                self.tasks.splice(index, 1);
+            });
+        },
+        editTask: function(task) {
+            var self = this;
+            self.taskModel = task;
+        },
+        saveTask: function() {
+            var self = this;
+            api.update(self.taskModel, function() {
+                var index = self.tasks.findIndex(i => i.id === self.taskModel.id);
+                self.tasks[index] = self.taskModel;
+                self.taskModel = {};
+            });
+        },
+        completeTask: function(task) {
+            var self = this;
+            task.completed = !task.completed;
+            api.update(task, function() {});
+        }
+    },
+    computed: {
+        filteredTasks: function() {
+            var self = this
+
+            if (!self.searchValue) {
+                return self.tasks;
+            }
+
+            return self.tasks.filter(function(value) {
+                return value.task.toLowerCase().includes(self.searchValue.toLowerCase());
+            });
+        }
+    }
 });

@@ -8,5 +8,3 @@ Presented by @bjwiley2 and @timleland
 2. Use the instance's data object to show data in the template
 3. Retrieve data from an APIU using the "mounted" lifecycle hook
 4. Render a list of items using the v-for directive
-5. Add a form component
-6. Make the form component not edit the source data
