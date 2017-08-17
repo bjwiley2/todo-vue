@@ -3,7 +3,7 @@ window.vm = new Vue({
     data: function() {
         return {
             heading: 'To Do List'
-        }
+        };
     },
     created: function() {
 
