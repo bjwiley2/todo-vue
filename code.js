@@ -4,7 +4,7 @@ window.vm = new Vue({
         return {
             heading: 'To Do List',
             tasks: []
-        }
+        };
     },
     created: function() {
         this.getTasks();
