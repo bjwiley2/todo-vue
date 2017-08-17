@@ -1,6 +1,6 @@
 Vue.directive('focus', {
     inserted: function(el) {
-        el.focus()
+        el.focus();
     }
 })
 
@@ -12,7 +12,7 @@ window.vm = new Vue({
             heading: 'To Do List',
             tasks: [],
             newTask: null
-        }
+        };
     },
     created: function() {
         this.getTasks();
