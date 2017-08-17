@@ -12,7 +12,7 @@ window.vm = new Vue({
             heading: 'To Do List',
             tasks: [],
             newTask: null
-        }
+        };
     },
     created: function() {
         this.getTasks();
@@ -34,7 +34,7 @@ window.vm = new Vue({
                 api.get(id, function(task) {
                     self.tasks.push(task);
                     self.newTask = null;
-                })
+                });
             });
         }
     }
