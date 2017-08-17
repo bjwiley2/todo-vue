@@ -17,32 +17,38 @@ const seedData = () => {
     write([{
             id: 14,
             task: "Learn more about HTML, CSS and Javascript",
-            completed: false
+            completed: false,
+            dateAdded: new Date("2016-01-4")
         },
         {
             id: 15,
             task: "Study for test",
-            completed: false
+            completed: false,
+            dateAdded: new Date("2013-06-1")
         },
         {
             id: 16,
             task: "Have some Fun",
-            completed: false
+            completed: false,
+            dateAdded: new Date("2014-03-3")
         },
         {
             id: 17,
             task: "Buy a puppy",
-            completed: false
+            completed: false,
+            dateAdded: new Date("2011-03-6")
         },
         {
             id: 22,
             task: "Eat pizza",
-            completed: false
+            completed: false,
+            dateAdded: new Date("2012-03-4")
         },
         {
             id: 23,
             task: "Go for a run",
-            completed: true
+            completed: true,
+            dateAdded: new Date("2013-04-3")
         }
     ]);
 };
