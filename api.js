@@ -3,7 +3,7 @@ const key = "todos";
 const read = () => JSON.parse(localStorage.getItem(key) || "[]");
 const write = (items) => localStorage.setItem(key, JSON.stringify(items));
 
-copyTask = (source, target) => {
+const copyTask = (source, target) => {
     source = source || {};
     target = target || {};
 
