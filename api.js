@@ -3,7 +3,10 @@ const key = "todos";
 const read = () => JSON.parse(localStorage.getItem(key) || "[]");
 const write = (items) => localStorage.setItem(key, JSON.stringify(items));
 
-const copy = (source, target) => {
+copyTask = (source, target) => {
+    source = source || {};
+    target = target || {};
+
     target.task = source.task;
     target.completed = !!source.completed;
     target.dateAdded = source.dateAdded || new Date();
@@ -84,7 +87,7 @@ api.update = (data, callback) => {
     setTimeout(() => {
         const items = read();
         const item = items.find(i => i.id === data.id);
-        copy(data, item);
+        copyTask(data, item);
         write(items);
         callback(true);
     }, delay);
@@ -94,7 +97,7 @@ api.create = (data, callback) => {
     setTimeout(() => {
         const items = read();
         const id = getNextId(items);
-        const item = copy(data, {
+        const item = copyTask(data, {
             id
         });
         items.push(item);

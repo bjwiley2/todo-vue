@@ -5,7 +5,6 @@ Vue.component('hover-card', {
     template: '<div class="hover-card"><a tabindex="-1" href="javascript:void(0);"><i class="fa fa-info-circle" aria-hidden="true"></i></a><div class="hover-detail slide-right bottom-positioned"><slot></slot></div></div>'
 });
 
-
 Vue.directive('focus', {
     inserted: function(el) {
         el.focus()
@@ -29,13 +28,54 @@ Vue.filter('formatDate', function(date) {
     return (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear()
 });
 
+var taskFormComponent = {
+  props: {
+    task: {
+      type: Object,
+      default: null
+    }
+  },
+  data: function () {
+    return {
+      formTask: {}
+    };
+  },
+  mounted: function () {
+    this.reset();
+  },
+  methods: {
+    reset: function () {
+      var source = this.task || {};
+
+      this.formTask = {
+        id: source.id,
+        task: source.task,
+        completed: !!source.completed,
+        dateAdded: source.dateAdded || new Date()
+      };
+    },
+    handleSubmit: function () {
+      this.$emit('submit', this.formTask);
+      this.reset();
+    }
+  },
+  computed: {
+    isAddForm: function () {
+      return !this.task;
+    }
+  },
+  template: '#task-form-template'
+};
+
 window.vm = new Vue({
     el: '#app',
+    components: {
+      taskForm: taskFormComponent
+    },
     data: function() {
         return {
             heading: 'To Do List',
             tasks: [],
-            newTask: null,
             taskModel: {},
             searchValue: null,
             taskLoaded: false
@@ -52,16 +92,12 @@ window.vm = new Vue({
                 self.tasks = tasks;
             });
         },
-        addTask: function() {
+        addTask: function(task) {
             var self = this;
-            var task = {
-                task: self.newTask
-            };
 
             api.create(task, function(id) {
                 api.get(id, function(task) {
                     self.tasks.push(task);
-                    self.newTask = null;
                 })
             });
         },
@@ -76,11 +112,11 @@ window.vm = new Vue({
             var self = this;
             self.taskModel = task;
         },
-        saveTask: function() {
+        saveTask: function(task) {
             var self = this;
-            api.update(self.taskModel, function() {
-                var index = self.tasks.findIndex(i => i.id === self.taskModel.id);
-                self.tasks[index] = self.taskModel;
+            api.update(task, function() {
+                var index = self.tasks.findIndex(i => i.id === task.id);
+                self.tasks[index] = task;
                 self.taskModel = {};
             });
         },

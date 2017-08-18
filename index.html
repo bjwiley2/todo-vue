@@ -14,12 +14,9 @@
 
     <div id="app" v-cloak>
         <h2>{{heading}}</h2>
-        <input type="text" placeholder="Search..." v-model="searchValue">
-        <hr>
-        <form v-on:submit.prevent="addTask">
-            <input type="text" required placeholder="New task" v-focus v-model="newTask">
-            <input type="submit" value="Add Task">
-        </form>
+        <input type="text" placeholder="Search..." v-model="searchValue" />
+        <hr />
+        <task-form v-on:submit="addTask"></task-form>
         <ol>
             <li v-for="(t, i) in filteredTasks">
                 <div v-if="t.id !== taskModel.id">
@@ -29,16 +26,20 @@
                     <button v-on:click="deleteTask(i)">Delete</button>
                 </div>
 
-                <form v-if="t.id === taskModel.id" v-on:submit.prevent="saveTask">
-                    <input type="text" required placeholder="New task" v-focus v-model="taskModel.task">
-                    <input type="submit" value="Save Task">
-                </form>
+                <task-form v-if="t.id === taskModel.id" v-bind:task="t" v-on:submit="saveTask"></task-form>
             </li>
         </ol>
 
         <p v-if="!taskLoaded">Loading task...</p>
         <p v-if="taskLoaded && filteredTasks.length === 0">No task exists</p>
     </div>
+
+    <script type="text/html" id="task-form-template">
+      <form v-on:submit.prevent="handleSubmit">
+          <input type="text" required placeholder="New task" v-focus v-model="formTask.task" />
+          <input type="submit" v-bind:value="isAddForm ? 'Add Task' : 'Save Task'" />
+      </form>
+    </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
