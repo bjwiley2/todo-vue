@@ -39,7 +39,9 @@
             <span class="pointer" v-on:click="completeTask" v-bind:class="{ 'strikethrough': task.completed }">
               {{ task.task | truncate(20) }}
             </span>
-            <hover-card>{{task.dateAdded | formatDate}}</hover-card>
+            <hover-card>
+              {{daysOld}} days old ({{task.dateAdded | formatDate}})
+            </hover-card>
             <button v-on:click="editTask">Edit</button>
             <button v-on:click="deleteTask">Delete</button>
         </div>

@@ -101,6 +101,14 @@ var taskItemComponent = {
         self.$emit('edit-task', self.task);
     },
   },
+  computed: {
+    daysOld: function () {
+      var today = new Date();
+      var started = new Date(this.task.dateAdded);
+      var msPerDay = 1000 * 60 * 60 * 24;
+      return Math.round((today-started)/msPerDay);
+    }
+  },
   template: '#task-item-template'
 };
 
