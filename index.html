@@ -19,20 +19,34 @@
         <task-form v-on:submit="addTask"></task-form>
         <ol>
             <li v-for="(t, i) in filteredTasks">
-                <div v-if="t.id !== taskModel.id">
-                    <span class="pointer" v-on:click="completeTask(t)" v-bind:class="{ 'strikethrough': t.completed }">{{ t.task | truncate(20) }}</span>
-                    <hover-card>{{t.dateAdded | formatDate}}</hover-card>
-                    <button v-on:click="editTask(t)">Edit</button>
-                    <button v-on:click="deleteTask(i)">Delete</button>
-                </div>
-
-                <task-form v-if="t.id === taskModel.id" v-bind:task="t" v-on:submit="saveTask"></task-form>
+                <task-item
+                  v-bind:task="t"
+                  v-bind:is-editing="t.id === taskModel.id"
+                  v-on:quit-editing="quitEditing"
+                  v-on:edit-task="editTask"
+                  v-on:delete-task="deleteTask">
+                </task-item>
             </li>
         </ol>
 
         <p v-if="!taskLoaded">Loading task...</p>
         <p v-if="taskLoaded && filteredTasks.length === 0">No task exists</p>
     </div>
+
+    <script type="text/html" id="task-item-template">
+      <div>
+        <div v-if="!isEditing">
+            <span class="pointer" v-on:click="completeTask" v-bind:class="{ 'strikethrough': task.completed }">
+              {{ task.task | truncate(20) }}
+            </span>
+            <hover-card>{{task.dateAdded | formatDate}}</hover-card>
+            <button v-on:click="editTask">Edit</button>
+            <button v-on:click="deleteTask">Delete</button>
+        </div>
+
+        <task-form v-if="isEditing" v-bind:task="task" v-on:submit="saveTask"></task-form>
+      </div>
+    </script>
 
     <script type="text/html" id="task-form-template">
       <form v-on:submit.prevent="handleSubmit">

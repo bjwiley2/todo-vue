@@ -67,10 +67,48 @@ var taskFormComponent = {
   template: '#task-form-template'
 };
 
+var taskItemComponent = {
+  components: {
+    taskForm: taskFormComponent
+  },
+  props: {
+    task: {
+      type: Object,
+      required: true
+    },
+    isEditing: {
+      type: Boolean,
+      required: true
+    }
+  },
+  methods: {
+    deleteTask: function () {
+      this.$emit('delete-task', this.task);
+    },
+    saveTask: function (formTask) {
+        var self = this;
+        self.task.task = formTask.task;
+        api.update(self.task, function () {});
+        this.$emit('quit-editing');
+    },
+    completeTask: function () {
+        var self = this;
+        this.task.completed = !this.task.completed;
+        api.update(self.task, function () {});
+    },
+    editTask: function () {
+        var self = this;
+        self.$emit('edit-task', self.task);
+    },
+  },
+  template: '#task-item-template'
+};
+
 window.vm = new Vue({
     el: '#app',
     components: {
-      taskForm: taskFormComponent
+      taskForm: taskFormComponent,
+      taskItem: taskItemComponent
     },
     data: function() {
         return {
@@ -92,7 +130,7 @@ window.vm = new Vue({
                 self.tasks = tasks;
             });
         },
-        addTask: function(task) {
+        addTask: function (task) {
             var self = this;
 
             api.create(task, function(id) {
@@ -101,29 +139,20 @@ window.vm = new Vue({
                 })
             });
         },
-        deleteTask: function(index) {
+        deleteTask: function (task) {
             var self = this;
-            var task = self.tasks[index];
+            var index = self.tasks.indexOf(task);
             api.delete(task.id, function() {
                 self.tasks.splice(index, 1);
             });
         },
-        editTask: function(task) {
+        editTask: function (task) {
             var self = this;
             self.taskModel = task;
         },
-        saveTask: function(task) {
+        quitEditing: function () {
             var self = this;
-            api.update(task, function() {
-                var index = self.tasks.findIndex(i => i.id === task.id);
-                self.tasks[index] = task;
-                self.taskModel = {};
-            });
-        },
-        completeTask: function(task) {
-            var self = this;
-            task.completed = !task.completed;
-            api.update(task, function() {});
+            self.taskModel = {};
         }
     },
     computed: {
