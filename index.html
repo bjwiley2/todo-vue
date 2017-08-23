@@ -10,8 +10,28 @@
 
 <body>
 
-    <div id="app">
+    <div id="app" v-cloak>
         <h2>{{heading}}</h2>
+
+        <form v-on:submit.prevent="addNewTask">
+          <input type="text" v-focus v-model="newTaskText" placeholder="Add new task" />
+          <input type="submit" />
+        </form>
+
+        <ol>
+          <li v-for="(t, i) in tasks" v-bind:key="t.id">
+            <div v-if="editingTask !== t">
+              {{t.task}}
+              <button v-on:click="setEditingTask(t)">Edit</button>
+              <button v-on:click="deleteTask(t, i)">Delete</button>
+            </div>
+
+            <form v-else v-on:submit.prevent="editTask">
+              <input type="text" v-model="editingTask.task" placeholder="Edit task" />
+              <input type="submit" />
+            </form>
+          </li>
+        </ol>
     </div>
 
     <script src="https://unpkg.com/vue@2.2.4" type="text/javascript"></script>
