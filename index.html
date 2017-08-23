@@ -27,7 +27,7 @@
             </div>
 
             <form v-else v-on:submit.prevent="editTask">
-              <input type="text" v-model="editingTask.task" placeholder="Edit task" />
+              <input type="text" v-model="editingTaskText" placeholder="Edit task" />
               <input type="submit" />
             </form>
           </li>
