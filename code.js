@@ -1,3 +1,18 @@
+Vue.component('hoverCard', {
+    mounted: function () {
+        $(this.$el).hoverCard();
+    },
+    template:
+      '<div class="hover-card">' +
+        '<a tabindex="-1" href="javascript:void(0);">' +
+          '<i class="fa fa-info-circle" aria-hidden="true"></i>' +
+        '</a>' +
+        '<div class="hover-detail slide-right bottom-positioned">' +
+          '<slot></slot>' +
+        '</div>' +
+      '</div>'
+});
+
 Vue.directive('focus', {
   inserted: function (el) {
     el.focus();

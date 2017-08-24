@@ -5,6 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <title>VueJS Workshop</title>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://onrealm.org/Bundles/Styles/site?v=BvcpfbJ_WnO5avCY7_UOK9q7TpBWQ3ixWj-nspW1AlY1" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 
@@ -19,6 +21,7 @@
           <li v-for="(t, i) in tasks" v-bind:key="t.id">
             <div v-if="editingTask !== t">
               {{t.task | truncate(20) }}
+              <hover-card>{{ t.dateAdded }}</hover-card>
               <button v-on:click="setEditingTask(t)">Edit</button>
               <button v-on:click="deleteTask(t, i)">Delete</button>
             </div>
