@@ -105,6 +105,7 @@ window.vm = new Vue({
             heading: 'To Do List',
             tasks: [],
             editingTask: null,
+            searchText: ''
         };
     },
     created: function() {
@@ -113,6 +114,20 @@ window.vm = new Vue({
       api.getList(function (items) {
         self.tasks = items;
       });
+    },
+    computed: {
+      filteredTasks: function () {
+        var self = this;
+        var term = this.searchText.trim();
+
+        if (term.length === 0) {
+          return self.tasks;
+        }
+
+        return self.tasks.filter(function (t) {
+          return t.task.indexOf(term) !== -1;
+        });
+      }
     },
     methods: {
       addNewTask: function (task) {
