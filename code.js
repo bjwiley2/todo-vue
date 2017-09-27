@@ -64,7 +64,7 @@ var taskFormComponent = {
 
     return {
       taskText: self.task ? self.task.task : '',
-      dateAdded: self.task ? self.task.dateAdded : new Date()
+      dateDue: self.task ? self.task.dateDue : new Date()
     };
   },
   computed: {
@@ -80,15 +80,14 @@ var taskFormComponent = {
   methods: {
     handleSubmit: function () {
       var self = this;
+
       self.$emit('submit', {
         task: self.taskText,
-        dateAdded: self.dateAdded,
-        completed: self.task ? self.task.completed : false
+        dateDue: self.dateDue
       });
 
       if (self.isAdd) {
         self.taskText = '';
-        self.dateAdded = new Date();
       }
     }
   },
@@ -105,7 +104,6 @@ window.vm = new Vue({
             heading: 'To Do List',
             tasks: [],
             editingTask: null,
-            searchText: ''
         };
     },
     created: function() {
@@ -115,27 +113,20 @@ window.vm = new Vue({
         self.tasks = items;
       });
     },
-    computed: {
-      filteredTasks: function () {
-        var self = this;
-        var term = this.searchText.trim();
-
-        if (term.length === 0) {
-          return self.tasks;
-        }
-
-        return self.tasks.filter(function (t) {
-          return t.task.indexOf(term) !== -1;
-        });
-      }
-    },
     methods: {
-      addNewTask: function (task) {
+      addNewTask: function (formData) {
         var self = this;
 
-        api.create(task, function (newId) {
-          task.id = newId;
-          self.tasks.push(task);
+        var newTask = {
+          completed: false,
+          dateAdded: new Date(),
+          task: formData.task,
+          dateDue: formData.dateDue
+        };
+
+        api.create(newTask, function (newId) {
+          newTask.id = newId;
+          self.tasks.push(newTask);
           self.newTaskText = '';
         });
       },
@@ -151,10 +142,11 @@ window.vm = new Vue({
         self.editingTask = task;
         self.editTaskText = task.task;
       },
-      editTask: function (task) {
+      editTask: function (formData) {
         var self = this;
-        self.editingTask.task = task.task;
-        self.editingTask.dateAdded = task.dateAdded;
+
+        self.editingTask.task = formData.task;
+        self.editingTask.dateDue = formData.dateDue;
 
         api.update(self.editingTask, function () {
           self.editingTask = null;
