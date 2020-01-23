@@ -46,19 +46,22 @@ window.vm = new Vue({
                 });
         },
         // method to delete a Task from the list
-        deleteTask: function (index) {
+        deleteTask: function (task, index) {
             var self = this;
-            var task = self.tasks[index];
             api.delete(task.id, function () {
                 self.tasks.splice(index, 1);
             });
         },
-        // method to edit a Task in the list
-        editTask: function (index) {
+        setEditingTask: function (task) {
             var self = this;
-            var task = self.tasks[index];
-            api.update(task.id, function () {
-                self.tasks.splice(index, 1);
+            self.editingTask = task;
+            self.editTaskText = task.task;
+        },
+        editTask: function () {
+            var self = this;
+            self.editingTask.task = self.editTaskText;
+            api.update(self.editingTask, function () {
+                self.editingTask = null;
             });
         }
     }

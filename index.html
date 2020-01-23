@@ -19,10 +19,17 @@
 			<input type="submit" value="Add Task">
 		</form>
 		<ol>
-			<li v-for="t in tasks" v-bind:key="t.id">
-				{{ t.task }}
-				<button @click="editTask(i)">Edit</button>
-				<button @click="deleteTask(i)">Delete</button>
+			<li v-for="(t, i) in tasks" v-bind:key="t.id">
+				<div v-if="editingTask !== t">
+					{{t.task}}
+					<button v-on:click="setEditingTask(t)">Edit</button>
+					<button v-on:click="deleteTask(t, i)">Delete</button>
+				</div>
+
+				<form v-else v-on:submit.prevent="editTask">
+					<input type="text" v-model="editTaskText" placeholder="Edit task" />
+					<input type="submit" />
+				</form>
 			</li>
 		</ol>
 	</div>
