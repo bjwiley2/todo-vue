@@ -21,7 +21,8 @@
 		<ol>
 			<li v-for="t in tasks" v-bind:key="t.id">
 				{{ t.task }}
-				<button @click="deleteTask">Delete</button>
+				<button @click="editTask(i)">Edit</button>
+				<button @click="deleteTask(i)">Delete</button>
 			</li>
 		</ol>
 	</div>
