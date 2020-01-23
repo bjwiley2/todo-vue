@@ -14,12 +14,18 @@ window.vm = new Vue({
         return {
             heading: 'To Do List',
             tasks: [],
-            newTask: null
+            newTask: null,
+            newTaskText: '',
+            editingTask: null,
+            editTaskText: ''
         };
     },
     //lifecycle hook to call a method to get a list of tasks
-    created: function() {
-        this.getTasks();
+    created: function () {
+        var self = this;
+        api.getList(function (items) {
+            self.tasks = items;
+        });
     },
     methods: {
         // method to get a list of tasks
@@ -63,6 +69,14 @@ window.vm = new Vue({
             api.update(self.editingTask, function () {
                 self.editingTask = null;
             });
+        }
+    },
+    filters: {
+        truncate: function (value) {
+            if (value.length > 20) {
+            value = value.substring(0, 20) + '...';
+            }
+         return value
         }
     }
 });
