@@ -14,12 +14,14 @@
 		<h2>{{heading}}</h2>
 		<!-- the submit event will no longer reload the page -->
 		<form v-on:submit.prevent="addTask">
+			<!--`v-focus` register a global custom directive-->
 			<input type="text" required placeholder="New task" v-focus v-model="newTask">
 			<input type="submit" value="Add Task">
 		</form>
 		<ol>
 			<li v-for="t in tasks" v-bind:key="t.id">
 				{{ t.task }}
+				<button @click="deleteTask">Delete</button>
 			</li>
 		</ol>
 	</div>
