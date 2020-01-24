@@ -1,12 +1,48 @@
 // Register a global custom directive called `v-focus`
-Vue.directive('focus', {
-    // When the bound element is inserted into the DOM...
-    inserted: function (el) {
-        // Focus the element
-        el.focus()
-    }
-})
+Vue.directive('focus',
+    {
+        // When the bound element is inserted into the DOM...
+        inserted: function(el) {
+            // Focus the element
+            el.focus();
+        }
+    });
 
+var taskFormComponent = {
+    props: {
+        task: {
+            type: Object,
+            default: null
+        }
+    },
+    data: function () {
+        var self = this;
+        return {
+            taskText: self.task ? self.task.task : ''
+        };
+    },
+    computed: {
+        isAdd: function () {
+            var self = this;
+            return self.task === null;
+        },
+        placeholder: function () {
+            var self = this;
+            return self.isAdd ? 'Add a task' : 'Edit this task';
+        }
+    },
+    methods: {
+        handleSubmit: function () {
+            var self = this;
+            self.$emit('submit', self.taskText);
+
+            if (self.isAdd) {
+                self.taskText = '';
+            }
+        }
+    },
+    template: '#task-form-template'
+};
 
 window.vm = new Vue({
     el: '#app',
@@ -77,7 +113,7 @@ window.vm = new Vue({
             if (value.length > 20) {
             value = value.substring(0, 20) + '...';
             }
-         return value
+         return value;
         }
     }
 });
