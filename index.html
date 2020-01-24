@@ -14,10 +14,10 @@
 		<h2>{{heading}}</h2>
 		<!-- the submit event will no longer reload the page -->
 		<form v-on:submit.prevent="addTask">
-			<!--`v-focus` register a global custom directive-->
-			<input type="text" required placeholder="New task" v-focus v-model="newTask">
-			<input type="submit" value="Add Task">
-		</form>
+				<!--`v-focus` register a global custom directive-->
+				<input type="text" required placeholder="New task" v-focus v-model="newTask">
+				<input type="submit" value="Add Task">
+			</form>
 		<ol>
 			<li v-for="(t, i) in tasks" v-bind:key="t.id">
 				<div v-if="editingTask !== t">
@@ -36,7 +36,8 @@
 
 	<script src="https://unpkg.com/vue@2.2.4" type="text/javascript"></script>
 	<script src="api.js" type="text/javascript"></script>
-	<script src="code.js" type="text/javascript"></script>
+<script src="code.js" type="text/javascript"></script>
+
 </body>
 
 </html>

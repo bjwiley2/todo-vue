@@ -10,6 +10,7 @@ Vue.directive('focus', {
 
 window.vm = new Vue({
     el: '#app',
+
     data: function() {
         return {
             heading: 'To Do List',
@@ -80,3 +81,5 @@ window.vm = new Vue({
         }
     }
 });
+
+
