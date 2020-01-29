@@ -1,12 +1,19 @@
-// Register a global custom directive called `v-focus`
-Vue.directive('focus',
-    {
-        // When the bound element is inserted into the DOM...
-        inserted: function(el) {
-            // Focus the element
-            el.focus();
-        }
-    });
+//Register a global custom directive called `v-focus`
+Vue.directive('focus', {
+    // When the bound element is inserted into the DOM...
+    inserted: function (el) {
+        // Focus the element
+        el.focus();
+    }
+});
+
+Vue.filter('truncate', function (value, maxLength) {
+    if (value.length <= maxLength) {
+        return value;
+    }
+
+    return value.substring(0, maxLength) + '...';
+});
 
 var taskFormComponent = {
     props: {
@@ -17,6 +24,7 @@ var taskFormComponent = {
     },
     data: function () {
         var self = this;
+
         return {
             taskText: self.task ? self.task.task : ''
         };
@@ -46,51 +54,45 @@ var taskFormComponent = {
 
 window.vm = new Vue({
     el: '#app',
-
-    data: function() {
+    components: {
+        taskForm: taskFormComponent
+    },
+    data: function () {
         return {
             heading: 'To Do List',
             tasks: [],
-            newTask: null,
-            newTaskText: '',
             editingTask: null,
-            editTaskText: ''
+            searchValue: null
         };
     },
-    //lifecycle hook to call a method to get a list of tasks
     created: function () {
         var self = this;
+        //lifecycle hook to call a method to get a list of tasks
         api.getList(function (items) {
             self.tasks = items;
         });
     },
     methods: {
-        // method to get a list of tasks
-        getTasks: function() {
-            var self = this;
-            api.getList(function(tasks) {
-                self.tasks = tasks;
-            });
-        },
         // method to add a Task to the list
-        addTask: function() {
+        addNewTask: function (text) {
             var self = this;
-            var task = {
-                task: self.newTask
+
+            var newTask = {
+                completed: false,
+                dateAdded: new Date(),
+                task: text
             };
-            //create a task, and clear the input
-            api.create(task,
-                function(id) {
-                    api.get(id,
-                        function(task) {
-                            self.tasks.push(task);
-                            self.newTask = null;
-                        });
-                });
+
+            api.create(newTask, function (newId) {
+                newTask.id = newId;
+                self.tasks.push(newTask);
+                self.newTaskText = '';
+            });
         },
         // method to delete a Task from the list
         deleteTask: function (task, index) {
             var self = this;
+
             api.delete(task.id, function () {
                 self.tasks.splice(index, 1);
             });
@@ -100,22 +102,30 @@ window.vm = new Vue({
             self.editingTask = task;
             self.editTaskText = task.task;
         },
-        editTask: function () {
+        editTask: function (text) {
             var self = this;
-            self.editingTask.task = self.editTaskText;
+            self.editingTask.task = text;
+
             api.update(self.editingTask, function () {
                 self.editingTask = null;
             });
         }
     },
-    filters: {
-        truncate: function (value) {
-            if (value.length > 20) {
-            value = value.substring(0, 20) + '...';
+    computed: {
+        filteredTasks: function () {
+            var self = this
+
+            if (!self.searchValue) {
+                return self.tasks;
             }
-         return value;
+
+            return self.tasks.filter(function (value) {
+                return value.task.toLowerCase().includes(self.searchValue.toLowerCase());
+            });
         }
     }
 });
+
+
 
 
