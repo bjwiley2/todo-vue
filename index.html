@@ -5,9 +5,9 @@
 <head>
 	<meta charset="UTF-8">
 	<title>VueJS Workshop</title>
-	<link rel="stylesheet" type="text/css" href="styles.css">
-</head>
-
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="https://onrealm.org/Bundles/Styles/site?v=BvcpfbJ_WnO5avCY7_UOK9q7TpBWQ3ixWj-nspW1AlY1" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="styles.css"></head>
 <body>
 <!--"v-cloak" hide elements, while Vue is mounting.-->
 <div id="app" v-cloak>
@@ -33,10 +33,16 @@
 <script type="text/html" id="task-form-template">
 	<form v-on:submit.prevent="handleSubmit">
 		<input type="text" v-focus v-model="taskText" v-bind:placeholder="placeholder" />
+		<date-picker v-model="dateDue" />
 		<input type="submit" />
 	</form>
 </script>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+<script src="https://onrealm.org/Bundles/Scripts/Vendor?v=jY0FoWE0hhQxdd7zCrSrdlOBv_vgU7xXtzUNZFUY5SM1"></script>
+<script src="https://onrealm.org/Bundles/Scripts/Common?v=nkaSPaueiwzP5YZEFKyO2iMdy9EzBgFl5gwoGknD1w81"></script>
+<script src="https://onrealm.org/Bundles/Scripts/Plugins?v=Sw1asq3TnOoCe8b9JNDBUxg8tQdjeIlKXp1kC_0axhs1"></script>
 <script src="https://unpkg.com/vue@2.2.4" type="text/javascript"></script>
 <script src="api.js" type="text/javascript"></script>
 <script src="code.js" type="text/javascript"></script>
