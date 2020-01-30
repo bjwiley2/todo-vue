@@ -12,7 +12,7 @@ Vue.directive('focus', {
 });
 
 Vue.filter('truncate', function (str, length) {
-    length = length || 30;
+    length = length || 20;
 
     if (str.length <= length) {
         return str;
@@ -25,7 +25,7 @@ Vue.filter('truncate', function (str, length) {
 
 Vue.filter('formatDate', function (date) {
     date = new Date(date);
-    return (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear()
+    return (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
 });
 
 var taskFormComponent = {
