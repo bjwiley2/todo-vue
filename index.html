@@ -30,10 +30,11 @@
 		</ol>
 
 		<p v-if="!taskLoaded">Loading task...</p>
-		<p v-if="taskLoaded && filteredTasks.length === 0">No task exists</p>
+		<p v-if="taskLoaded && filteredTasks.length == 0">No task exists</p>
 	</div>
 
 	<script type="text/html" id="task-form-template">
+		<!-- the handleSubmit event will no longer reload the page -->
 		<form v-on:submit.prevent="handleSubmit">
 			<input type="text" required placeholder="New task" v-focus v-model="formTask.task" />
 			<input type="submit" v-bind:value="isAddForm ? 'Add Task' : 'Save Task'" />

@@ -45,6 +45,7 @@ var taskFormComponent = {
     },
     methods: {
         reset: function () {
+            //{} (an empty object - it's the same as new Object()
             var source = this.task || {};
 
             this.formTask = {
@@ -94,10 +95,11 @@ window.vm = new Vue({
         },
         addTask: function (task) {
             var self = this;
-
+            self.taskLoaded = false;
             api.create(task, function (id) {
                 api.get(id, function (task) {
                     self.tasks.push(task);
+                    self.taskLoaded = true;
                 })
             });
         },
@@ -128,12 +130,11 @@ window.vm = new Vue({
     },
     computed: {
         filteredTasks: function () {
-            var self = this
+            var self = this;
             //searching a task from input form
             if (!self.searchValue) {
                 return self.tasks;
             }
-
             return self.tasks.filter(function (value) {
                 return value.task.toLowerCase().includes(self.searchValue.toLowerCase());
             });

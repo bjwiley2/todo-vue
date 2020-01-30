@@ -7,6 +7,10 @@
 	margin: auto;
 }
 
+li {
+	width: 400px;
+}
+
 .strikethrough {
 	text-decoration: line-through;
 }
