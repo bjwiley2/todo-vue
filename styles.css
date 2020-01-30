@@ -18,3 +18,7 @@ li {
 .pointer {
 	cursor: pointer;
 }
+
+body {
+	 background-color: whitesmoke;
+}
