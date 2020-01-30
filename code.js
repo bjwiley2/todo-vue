@@ -1,58 +1,31 @@
-Vue.component('datePicker', {
-    props: {
-        value: [String, Date]
-    },
-    methods: {
-        formatValueForPlugin: function (date) {
-            if (date === null) {
-                return null;
-            }
-
-            date = new Date(date);
-            return date.toLocaleDateString();
-        },
-        handleChange: function (value) {
-            var self = this;
-            self.$emit('input', value);
-            self.$emit('change', value);
-        },
-        setValue: function () {
-            var self = this;
-            var formattedValue = self.formatValueForPlugin(this.value);
-            $(self.$el).datePicker('setValue', formattedValue);
-        }
-    },
-    watch: {
-        value: function () {
-            var self = this;
-            self.setValue();
-        }
-    },
+Vue.component('hover-card', {
     mounted: function () {
-        var self = this;
-        var el = $(self.$el);
-        el.data('changeCallback', self.handleChange);
-        el.datePicker();
-        self.setValue();
+        $(this.$el).hoverCard();
     },
-    template: '<input type="text" />'
+    template: '<div class="hover-card"><a tabindex="-1" href="javascript:void(0);"></a><div class="hover-detail slide-right bottom-positioned"><slot></slot></div></div>'
 });
 
-//Register a global custom directive called `v-focus`
 Vue.directive('focus', {
-    // When the bound element is inserted into the DOM...
     inserted: function (el) {
-        // Focus the element
-        el.focus();
+        el.focus()
     }
 });
 
-Vue.filter('truncate', function (value, maxLength) {
-    if (value.length <= maxLength) {
-        return value;
+Vue.filter('truncate', function (str, length) {
+    length = length || 30;
+
+    if (str.length <= length) {
+        return str;
     }
 
-    return value.substring(0, maxLength) + '...';
+    str = str.slice(0, length);
+
+    return str + '...';
+});
+
+Vue.filter('formatDate', function (date) {
+    date = new Date(date);
+    return (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear()
 });
 
 var taskFormComponent = {
@@ -63,34 +36,32 @@ var taskFormComponent = {
         }
     },
     data: function () {
-        var self = this;
-
         return {
-            taskText: self.task ? self.task.task : '',
-            dateDue: self.task ? self.task.dateDue : new Date()
+            formTask: {}
         };
     },
-    computed: {
-        isAdd: function () {
-            var self = this;
-            return self.task === null;
-        },
-        placeholder: function () {
-            var self = this;
-            return self.isAdd ? 'Add a task' : 'Edit this task';
-        }
+    mounted: function () {
+        this.reset();
     },
     methods: {
-        handleSubmit: function () {
-            var self = this;
+        reset: function () {
+            var source = this.task || {};
 
-            self.$emit('submit', {
-                task: self.taskText,
-                dateDue: self.dateDue
-            });
-            if (self.isAdd) {
-                self.taskText = '';
-            }
+            this.formTask = {
+                id: source.id,
+                task: source.task,
+                completed: !!source.completed,
+                dateAdded: source.dateAdded || new Date()
+            };
+        },
+        handleSubmit: function () {
+            this.$emit('submit', this.formTask);
+            this.reset();
+        }
+    },
+    computed: {
+        isAddForm: function () {
+            return !this.task;
         }
     },
     template: '#task-form-template'
@@ -105,63 +76,60 @@ window.vm = new Vue({
         return {
             heading: 'To Do List',
             tasks: [],
-            editingTask: null,
-            searchValue: null
-        };
+            taskModel: {},
+            searchValue: null,
+            taskLoaded: true
+        }
     },
     created: function () {
-        var self = this;
-        //lifecycle hook to call a method to get a list of tasks
-        api.getList(function (items) {
-            self.tasks = items;
-        });
+        this.getTasks();
     },
     methods: {
-        // method to add a Task to the list
-        addNewTask: function (formData) {
+        getTasks: function () {
             var self = this;
-
-            var newTask = {
-                completed: false,
-                dateAdded: new Date(),
-                task: formData.task,
-                dateDue: formData.dateDue
-            };
-
-            api.create(newTask, function (newId) {
-                newTask.id = newId;
-                self.tasks.push(newTask);
-                self.newTaskText = '';
+            api.getList(function (tasks) {
+                self.taskLoaded = true;
+                self.tasks = tasks;
             });
         },
-        // method to delete a Task from the list
-        deleteTask: function (task, index) {
+        addTask: function (task) {
             var self = this;
 
+            api.create(task, function (id) {
+                api.get(id, function (task) {
+                    self.tasks.push(task);
+                })
+            });
+        },
+        deleteTask: function (index) {
+            var self = this;
+            var task = self.tasks[index];
             api.delete(task.id, function () {
                 self.tasks.splice(index, 1);
             });
         },
-        setEditingTask: function (task) {
+        editTask: function (task) {
             var self = this;
-            self.editingTask = task;
-            self.editTaskText = task.task;
+            self.taskModel = task;
         },
-        editTask: function (formData) {
+        saveTask: function (task) {
             var self = this;
-
-            self.editingTask.task = formData.task;
-            self.editingTask.dateDue = formData.dateDue;
-
-            api.update(self.editingTask, function () {
-                self.editingTask = null;
+            api.update(task, function () {
+                var index = self.tasks.findIndex(i => i.id === task.id);
+                self.tasks[index] = task;
+                self.taskModel = {};
             });
+        },
+        completeTask: function (task) {
+            var self = this;
+            task.completed = !task.completed;
+            api.update(task, function () { });
         }
     },
     computed: {
         filteredTasks: function () {
             var self = this
-
+            //searching a task from input form
             if (!self.searchValue) {
                 return self.tasks;
             }
