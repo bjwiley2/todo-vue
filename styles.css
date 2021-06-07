@@ -1,3 +1,24 @@
 [v-cloak] {
-  display: none;
+	display: none;
+}
+
+#app {
+	width: 500px;
+	margin: auto;
+}
+
+li {
+	width: 400px;
+}
+
+.strikethrough {
+	text-decoration: line-through;
+}
+
+.pointer {
+	cursor: pointer;
+}
+
+body {
+	 background-color: whitesmoke;
 }
